@@ -24,7 +24,7 @@ namespace DictionaryList
 
         public void AddMultiple(Tkey key, IEnumerable<TValue> value)
         {
-            if (!_internalDictionary.ContainsKey(key)) 
+            if (_internalDictionary.ContainsKey(key)) 
             {
                 _internalDictionary[key].AddRange(value);
             } 

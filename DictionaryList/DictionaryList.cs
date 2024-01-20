@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
+using System.Linq;
 
 namespace DictionaryList
 {
@@ -8,7 +8,7 @@ namespace DictionaryList
     {
         private Dictionary<Tkey, List<TValue>> _internalDictionary = new Dictionary<Tkey, List<TValue>>();
 
-        public int Count => throw new NotImplementedException();
+        public int Count => _internalDictionary.Count;
 
         public void Add(Tkey key, TValue value)
         {
@@ -24,17 +24,28 @@ namespace DictionaryList
 
         public void AddMultiple(Tkey key, IEnumerable<TValue> value)
         {
-            throw new NotImplementedException();
+            if (!_internalDictionary.ContainsKey(key)) 
+            {
+                _internalDictionary[key].AddRange(value);
+            } 
+            else 
+            {
+                _internalDictionary.Add(key, value.ToList());
+            }
         }
 
         public int CountElementsByKey(Tkey key)
         {
-            throw new NotImplementedException();
+            if (_internalDictionary.TryGetValue(key, out var values)) {
+                return values.Count;
+            }
+
+            return 0;
         }
 
-        public bool Exists(Tkey key)
+        public bool ContainsKey(Tkey key)
         {
-            throw new NotImplementedException();
+            return _internalDictionary.ContainsKey(key);
         }
 
         public IEnumerable<TValue> Get(Tkey key)
@@ -49,7 +60,7 @@ namespace DictionaryList
 
         public void Remove(Tkey key)
         {
-            throw new NotImplementedException();
+            _internalDictionary.Remove(key);
         }
     }
 }

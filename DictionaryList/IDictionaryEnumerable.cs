@@ -8,7 +8,7 @@ namespace DictionaryList
         void Add(Tkey key, TValue value);
         void AddMultiple(Tkey key, IEnumerable<TValue> value);
         void Remove(Tkey key);
-        bool Exists(Tkey key);
+        bool ContainsKey(Tkey key);
         IEnumerable<TValue> Get(Tkey key);
         int Count { get; }
         int CountElementsByKey(Tkey key);

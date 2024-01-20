@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DictionaryList\DictionaryList.csproj" />
+  </ItemGroup>
+
 </Project>

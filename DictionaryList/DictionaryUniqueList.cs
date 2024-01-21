@@ -1,41 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
 
 namespace DictionaryList
 {
-    public class DictionaryUniqueList<Tkey, TValue> : IDictionaryEnumerable<Tkey, TValue>
+    public class DictionaryUniqueList<TKey, TValue>
     {
-        public int Count => throw new NotImplementedException();
+        private Dictionary<TKey, HashSet<TValue>> dict = new Dictionary<TKey, HashSet<TValue>>();
 
-        public void Add(Tkey key, TValue value)
+        public void Add(TKey key, TValue value)
         {
-            throw new NotImplementedException();
+            if (!dict.ContainsKey(key))
+            {
+                dict[key] = new HashSet<TValue>();
+            }
+
+            dict[key].Add(value);
         }
 
-        public void AddMultiple(Tkey key, IEnumerable<TValue> value)
+        public bool ContainsKey(TKey key)
         {
-            throw new NotImplementedException();
+            return dict.ContainsKey(key);
         }
 
-        public bool ContainsKey(Tkey key)
+        public bool ContainsValue(TKey key, TValue value)
         {
-            throw new NotImplementedException();
+            return dict.ContainsKey(key) && dict[key].Contains(value);
         }
 
-        public int CountElementsByKey(Tkey key)
+        public bool Remove(TKey key)
         {
-            throw new NotImplementedException();
+            return dict.Remove(key);
         }
 
-        public IEnumerable<TValue> Get(Tkey key)
+        public bool Remove(TKey key, TValue value)
         {
-            throw new NotImplementedException();
+            return dict.ContainsKey(key) && dict[key].Remove(value);
         }
 
-        public void Remove(Tkey key)
+        public IEnumerable<TKey> Keys => dict.Keys;
+
+        public IEnumerable<TValue> Values(TKey key)
         {
-            throw new NotImplementedException();
+            if (dict.ContainsKey(key))
+            {
+                return dict[key];
+            }
+            else
+            {
+                return new HashSet<TValue>();
+            }
         }
     }
 }

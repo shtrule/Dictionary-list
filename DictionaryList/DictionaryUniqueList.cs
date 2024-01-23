@@ -5,45 +5,57 @@ namespace DictionaryList
 {
     public class DictionaryUniqueList<TKey, TValue>
     {
-        private Dictionary<TKey, HashSet<TValue>> dict = new Dictionary<TKey, HashSet<TValue>>();
+        private Dictionary<TKey, HashSet<TValue>> _dictionary;
+        private IEqualityComparer<TValue> _valueComparer;
+
+        public DictionaryUniqueList(IEqualityComparer<TKey> keyComparer = null, IEqualityComparer<TValue> valueComparer = null)
+        {
+            _dictionary = new Dictionary<TKey, HashSet<TValue>>(keyComparer ?? EqualityComparer<TKey>.Default);
+            _valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
+        }
+
+        public DictionaryUniqueList(IEqualityComparer<TValue> valueComparer) : this(EqualityComparer<TKey>.Default)
+        {
+            _valueComparer = valueComparer;
+        }
 
         public void Add(TKey key, TValue value)
         {
-            if (!dict.ContainsKey(key))
+            if (!_dictionary.ContainsKey(key))
             {
-                dict[key] = new HashSet<TValue>();
+                _dictionary[key] = new HashSet<TValue>(_valueComparer);
             }
 
-            dict[key].Add(value);
+            _dictionary[key].Add(value);
         }
 
         public bool ContainsKey(TKey key)
         {
-            return dict.ContainsKey(key);
+            return _dictionary.ContainsKey(key);
         }
 
         public bool ContainsValue(TKey key, TValue value)
         {
-            return dict.ContainsKey(key) && dict[key].Contains(value);
+            return _dictionary.ContainsKey(key) && _dictionary[key].Contains(value);
         }
 
         public bool Remove(TKey key)
         {
-            return dict.Remove(key);
+            return _dictionary.Remove(key);
         }
 
         public bool Remove(TKey key, TValue value)
         {
-            return dict.ContainsKey(key) && dict[key].Remove(value);
+            return _dictionary.ContainsKey(key) && _dictionary[key].Remove(value);
         }
 
-        public IEnumerable<TKey> Keys => dict.Keys;
+        public IEnumerable<TKey> Keys => _dictionary.Keys;
 
         public IEnumerable<TValue> Values(TKey key)
         {
-            if (dict.ContainsKey(key))
+            if (_dictionary.ContainsKey(key))
             {
-                return dict[key];
+                return _dictionary[key];
             }
             else
             {

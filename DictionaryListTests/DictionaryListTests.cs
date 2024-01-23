@@ -6,6 +6,23 @@ public class DictionaryListTests
 {
 
     [Fact]
+    public void DictionaryList_Constructor_WithComparer_ShouldCreateDictionaryWithComparer()
+    {
+        // Arrange
+        var dictionaryList = new DictionaryList<string, string>(StringComparer.InvariantCultureIgnoreCase);
+
+        // Act
+
+        dictionaryList.Add("test", "test1");
+        dictionaryList.Add("TEST", "test2");
+
+        // Assert
+        Assert.NotNull(dictionaryList);
+        Assert.Equal(1, dictionaryList.Count);
+        Assert.Equal(2, dictionaryList.CountElementsByKey("test"));
+    }
+
+    [Fact]
     public void TestAdd()
     {
         var dictionaryList = new DictionaryList<string, int>();

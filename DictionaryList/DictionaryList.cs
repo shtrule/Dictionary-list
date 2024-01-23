@@ -6,37 +6,44 @@ namespace DictionaryList
 {
     public class DictionaryList<Tkey, TValue> : IDictionaryEnumerable<Tkey, TValue>
     {
-        private Dictionary<Tkey, List<TValue>> _internalDictionary = new Dictionary<Tkey, List<TValue>>();
+        private Dictionary<Tkey, List<TValue>> _dictionary;
 
-        public int Count => _internalDictionary.Count;
+        public DictionaryList() : this(EqualityComparer<Tkey>.Default) { }
+
+        public DictionaryList(IEqualityComparer<Tkey> comparer)
+        {
+            _dictionary = new Dictionary<Tkey, List<TValue>>(comparer);
+        }
+
+        public int Count => _dictionary.Count;
 
         public void Add(Tkey key, TValue value)
         {
-            if (_internalDictionary.ContainsKey(key)) 
+            if (_dictionary.ContainsKey(key)) 
             {
-                _internalDictionary[key].Add(value);
+                _dictionary[key].Add(value);
             }
             else 
             {
-                _internalDictionary.Add(key, new List<TValue>() {value});
+                _dictionary.Add(key, new List<TValue>() {value});
             }
         }
 
         public void AddMultiple(Tkey key, IEnumerable<TValue> value)
         {
-            if (_internalDictionary.ContainsKey(key)) 
+            if (_dictionary.ContainsKey(key)) 
             {
-                _internalDictionary[key].AddRange(value);
+                _dictionary[key].AddRange(value);
             } 
             else 
             {
-                _internalDictionary.Add(key, value.ToList());
+                _dictionary.Add(key, value.ToList());
             }
         }
 
         public int CountElementsByKey(Tkey key)
         {
-            if (_internalDictionary.TryGetValue(key, out var values)) {
+            if (_dictionary.TryGetValue(key, out var values)) {
                 return values.Count;
             }
 
@@ -45,12 +52,12 @@ namespace DictionaryList
 
         public bool ContainsKey(Tkey key)
         {
-            return _internalDictionary.ContainsKey(key);
+            return _dictionary.ContainsKey(key);
         }
 
         public IEnumerable<TValue> Get(Tkey key)
         {
-            if (_internalDictionary.TryGetValue(key, out var values)) 
+            if (_dictionary.TryGetValue(key, out var values)) 
             {
                 return values;
             }
@@ -60,7 +67,7 @@ namespace DictionaryList
 
         public void Remove(Tkey key)
         {
-            _internalDictionary.Remove(key);
+            _dictionary.Remove(key);
         }
     }
 }

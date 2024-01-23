@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DictionaryList
 {
-    public class DictionaryUniqueList<TKey, TValue>
+    public class DictionaryUniqueList<TKey, TValue> : IDictionaryEnumerable<TKey, TValue>
     {
         private Dictionary<TKey, HashSet<TValue>> _dictionary;
         private IEqualityComparer<TValue> _valueComparer;
@@ -39,9 +39,9 @@ namespace DictionaryList
             return _dictionary.ContainsKey(key) && _dictionary[key].Contains(value);
         }
 
-        public bool Remove(TKey key)
+        public void Remove(TKey key)
         {
-            return _dictionary.Remove(key);
+            _dictionary.Remove(key);
         }
 
         public bool Remove(TKey key, TValue value)
@@ -50,6 +50,8 @@ namespace DictionaryList
         }
 
         public IEnumerable<TKey> Keys => _dictionary.Keys;
+
+        public int Count => _dictionary.Count;
 
         public IEnumerable<TValue> Values(TKey key)
         {
@@ -61,6 +63,37 @@ namespace DictionaryList
             {
                 return new HashSet<TValue>();
             }
+        }
+
+        public void AddMultiple(TKey key, IEnumerable<TValue> values)
+        {
+            if (!_dictionary.ContainsKey(key)) 
+            {
+                _dictionary[key] = new HashSet<TValue>(_valueComparer);
+            } 
+            
+            foreach (var value in values) {
+                _dictionary[key].Add(value);
+            }
+        }
+
+        public IEnumerable<TValue> Get(TKey key)
+        {
+            if (_dictionary.TryGetValue(key, out var values)) 
+            {
+                return values;
+            }
+
+            return new List<TValue>();
+        }
+
+        public int CountElementsByKey(TKey key)
+        {
+            if (_dictionary.TryGetValue(key, out var values)) {
+                return values.Count;
+            }
+
+            return 0;
         }
     }
 }

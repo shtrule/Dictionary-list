@@ -5,6 +5,24 @@ namespace DictionaryListTests;
 public class DictionaryUniqueListTests
 {
     [Fact]
+    public void DictionaryUniqueList_Constructor_WithComparer_ShouldCreateDictionaryWithComparer()
+    {
+        // Arrange
+        var dictionaryList = new DictionaryUniqueList<string, string>(StringComparer.InvariantCultureIgnoreCase, null);
+
+        // Act
+
+        dictionaryList.Add("test", "test1");
+        dictionaryList.Add("TEST", "test2");
+
+        // Assert
+        Assert.NotNull(dictionaryList);
+        Assert.Equal(1, dictionaryList.Count);
+        Assert.Equal(2, dictionaryList.CountElementsByKey("test"));
+    }
+
+
+    [Fact]
     public void TestAddAndContains()
     {
         var dict = new DictionaryUniqueList<string, int>();
